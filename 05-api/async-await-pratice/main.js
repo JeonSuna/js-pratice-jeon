@@ -125,4 +125,61 @@ data()
 //이 시점에서는 거의 즉시 결과를 받을 수 있습니다.
 
 
+//보너스 문제~
+function checkStock(bookId) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (Math.random() > 0.2) {
+                resolve(`책 ${bookId}의 재고가 확인되었습니다.`);
+            } else {
+                reject(`책 ${bookId}는 재고가 없습니다.`);
+            }
+        }, 1000);
+    });
+}
 
+function processPayment(amount) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (Math.random() > 0.1) {
+                resolve(`${amount}원 결제가 완료되었습니다.`);
+            } else {
+                reject("결제에 실패했습니다.");
+            }
+        }, 1500);
+    });
+}
+
+function sendEmail(orderId) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(`주문 ${orderId}에 대한 확인 이메일을 발송했습니다.`);
+        }, 1000);
+    });
+}
+
+async function processOrder(bookId, amount, orderId) {
+    try {//비동기 작업들
+        let stockResult = await checkStock(bookId)
+        console.log(stockResult)
+
+        let paymentResult = await processPayment(amount)
+        console.log(paymentResult)
+
+        let sendresult = await sendEmail(orderId)
+        console.log(sendresult)
+        return '주문 완료'
+
+    } catch (error) {//오류처리
+        //try에서 발견하는 오류를 모두 다 catch에서 받음음
+        return `주문처리 실패:${error}`
+
+    }
+
+}
+
+processOrder('book123', 20, 'asd')
+    .then(value => console.log(value))
+    .catch(error => console.log(error))
+/*모든 단계가 성공적으로 완료되면 "주문이 성공적으로 처리되었습니다."라는 메시지를 반환하세요.
+어느 단계에서든 오류가 발생하면 해당 오류 메시지를 포착하고 "주문 처리 실패: [오류 메시지]"를 반환하세요. */
